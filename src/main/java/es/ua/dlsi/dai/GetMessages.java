@@ -80,31 +80,49 @@ public class GetMessages extends HttpServlet{
 			for(int i=0; i < results.size(); i++)
 			{
 				Entity jsonalert = results.get(i);
-				GeoPt coordenada = (GeoPt) jsonalert.getProperty("coordenada_origen");
-				if(coordenada != null)
+				//GeoPt coordenada = (GeoPt) jsonalert.getProperty("coordenada_origen");
+				String longitud_str = (String) jsonalert.getProperty("longitud");
+				String latitud_str = (String) jsonalert.getProperty("latitud");
+				//if(coordenada != null)
+				if(longitud_str != null && latitud_str != null)
 				{
 					double latitud_mensaje, longitud_mensaje, distancia;
-					latitud_mensaje = coordenada.getLatitude();
-					longitud_mensaje = coordenada.getLongitude();
+					//latitud_mensaje = coordenada.getLatitude();
+					//longitud_mensaje = coordenada.getLongitude();
+					//latitud_mensaje = (long) jsonalert.getProperty("longitud");
+					//longitud_mensaje =  (long) jsonalert.getProperty("latitud");
+					latitud_mensaje = Double.parseDouble(latitud_str);
+					longitud_mensaje =  Double.parseDouble(longitud_str);
+					
 					
 					distancia = p_Distancia_punto(latitud_mensaje, longitud_mensaje, Double.parseDouble(latitud), Double.parseDouble(longitud));
 					
-					if((long) distancia <= (long) jsonalert.getProperty("area_mensaje"))
+					if(distancia <= (double) jsonalert.getProperty("area_mensaje"))
 					{						
 						JsonObject mensaje_json = new JsonObject();
 						
 						String mensaje = (String) jsonalert.getProperty("contenido").toString();
 						String nombre = (String) jsonalert.getKey().toString();
 						String area_mensaje = (String) jsonalert.getProperty("area_mensaje").toString();
-						String coordenada_origen = (String) jsonalert.getProperty("coordenada_origen").toString();
-						String tiempo_creacion = (String) jsonalert.getProperty("tiempo_creacion").toString();
+						//String coordenada_origen = (String) jsonalert.getProperty("coordenada_origen").toString();
+						
+						
+						
 						String tiempo_vida = (String) jsonalert.getProperty("tiempo_vida").toString();
 						
 						mensaje_json.addProperty("nombre", nombre);
 						mensaje_json.addProperty("mensaje", mensaje);
 						mensaje_json.addProperty("area_mensaje", area_mensaje);
-						mensaje_json.addProperty("coordenada_origen", coordenada_origen);
-						mensaje_json.addProperty("tiempo_creacion", tiempo_creacion);
+						//mensaje_json.addProperty("coordenada_origen", coordenada_origen);
+						mensaje_json.addProperty("latitud", latitud_str);
+						mensaje_json.addProperty("longitud", longitud_str);
+						
+						if(jsonalert.getProperty("tiempo_creacion") != null)
+						{
+							String tiempo_creacion = (String) jsonalert.getProperty("tiempo_creacion").toString();
+							mensaje_json.addProperty("tiempo_creacion", tiempo_creacion);
+						}	
+						
 						mensaje_json.addProperty("tiempo_vida", tiempo_vida);
 												
 						arrayalerts.add(mensaje_json);

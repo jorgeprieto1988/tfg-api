@@ -60,15 +60,16 @@ public class SetMessage extends HttpServlet{
 		  datastore = DatastoreServiceFactory.getDatastoreService();
 		  
 		  Entity savealerta = new Entity("alerta");
-		  savealerta.setProperty("area_mensaje", area_mensaje);
+		  savealerta.setProperty("area_mensaje", Double.parseDouble(area_mensaje));
 		  savealerta.setProperty("contenido", contenido);
-		  savealerta.setProperty("tiempo_vida", tiempo_vida);
+		  savealerta.setProperty("tiempo_vida", Integer.parseInt(tiempo_vida));
 		  savealerta.setProperty("latitud", latitud);
 		  savealerta.setProperty("longitud", longitud);
 		  datastore.put(savealerta);
 		  
 		  JsonArray arrayvacio = new JsonArray();
-		  resultok.add("result", arrayvacio);
+		  arrayvacio.add("Mensaje insertado de manera correcta");
+		  resultok.add("result: ", arrayvacio);
 			 
 		  response.getWriter().write(resultok.toString());	    
 	  }
